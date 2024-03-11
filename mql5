@@ -1,0 +1,67 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                                      Timeframe Separator |
+//|                                      forexroboteasy.com    |
+//|                                      Forex Robot Easy Team |
+//|                                        |
+//|                                        |
+//|                                        |
+//|                                          |
+//+------------------------------------------------------------------+
+#property copyright 'forexroboteasy.com'
+#property link      'forexroboteasy.com'
+#property version   '1.0'
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+#include <ChartObjects\ChartObjectsLines.mqh>
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnStart()
+{
+   // Calculate timeframes
+   datetime startTimeframeH1 = iTime(_Symbol, PERIOD_H1, 0);
+   datetime startTimeframeH4 = iTime(_Symbol, PERIOD_H4, 0);
+   datetime startTimeframeD1 = iTime(_Symbol, PERIOD_D1, 0);
+   datetime startTimeframeW1 = iTime(_Symbol, PERIOD_W1, 0);
+   datetime startTimeframeMN1 = iTime(_Symbol, PERIOD_MN1, 0);
+   
+   // Draw vertical lines
+   DrawVerticalLine(startTimeframeH1, 'H1');
+   DrawVerticalLine(startTimeframeH4, 'H4');
+   DrawVerticalLine(startTimeframeD1, 'D1');
+   DrawVerticalLine(startTimeframeW1, 'W1');
+   DrawVerticalLine(startTimeframeMN1, 'MN1');
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void DrawVerticalLine(datetime time, string label)
+{
+   // Define line properties
+   CChartObjectLine line;
+   line.Create(0, label, OBJ_VLINE, 0, time, 0, time);
+   line.Color = clrGray;
+   line.Width = 1;
+   line.RayRight = false;
+   line.RayLeft = false;
+   
+   // Add line to chart
+   ChartObjectsRedraw();
+}
+
+//+------------------------------------------------------------------+
+//|                                                                  |
+//+------------------------------------------------------------------+
+void OnChartEvent(const int id, const long &lparam, const double &dparam, const string &sparam)
+{
+   if (id == CHARTEVENT_OBJECT_DELETE)
+   {
+      // Redraw lines if deleted
+      ChartObjectsRedraw();
+   }
+}
